@@ -14,7 +14,6 @@ var config global.Global
 func main() {
 	dbAddr := flag.String("db", "0.0.0.0", "mongodb address")
 	flag.Parse()
-	config = global.Global{}
 
 	iris.Logger.Println("Connecting to mogno...")
 	session, err := mgo.Dial("mongodb://" + *dbAddr)
