@@ -19,8 +19,3 @@ type EventRecord struct {
 	Timestamp int64         `bson:"created_at"`
 	Event     interface{}   `bson:"event"`
 }
-
-//All of the event types
-type PlayerAddedEvent struct {
-	Id string `bson: id`
-}

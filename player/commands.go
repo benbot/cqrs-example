@@ -15,7 +15,7 @@ import (
 
 func player_add() (string, error) {
 	c := global.G.Db.C("users")
-	event := events.PlayerAddedEvent{uuid.NewV4().String()}
+	event := PlayerAddedEvent{uuid.NewV4().String()}
 
 	record := events.NewEvent(event)
 
