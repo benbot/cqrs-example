@@ -1,2 +1,9 @@
-package: dimension-1
-import: []
+package: cqrs-example
+import:
+- package: github.com/iris-contrib/middleware
+  subpackages:
+  - logger
+- package: github.com/kataras/iris
+- package: gopkg.in/mgo.v2
+  subpackages:
+  - bson
