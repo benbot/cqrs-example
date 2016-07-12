@@ -4,6 +4,8 @@ import (
 	"cqrs-example/global"
 	"errors"
 
+	"github.com/kataras/iris"
+
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -12,27 +14,40 @@ type Player struct {
 }
 
 func player_projection(id string) (*Player, error) {
+	defer func() {
+		if e := recover(); e != nil {
+			iris.Logger.Println(e)
+		}
+	}()
+
 	c := global.G.Db.C("users")
 
-	var records []struct {
+	type evDeconstruct struct {
 		Type  string                 `bson:"type"`
 		Event map[string]interface{} `bson:"event"`
 	}
 
-	c.Find(bson.M{"event.id": id}).Sort("_id").All(&records)
+	iter := c.Find(bson.M{"event.id": id}).Sort("_id").Iter()
 
-	if len(records) <= 0 {
-		return nil, errors.New("player not found")
-	}
+	var ev evDeconstruct
+	var p *Player
 
-	p := Player{}
-
-	for _, e := range records {
+	for iter.Next(&ev) {
 		switch {
-		case e.Type == "PlayerAddedEvent":
-			p.Id = e.Event["id"].(string)
+		case ev.Type == "PlayerAddedEvent":
+			// This should be the first event for any player
+			// so we devine p here. If another event comes first
+			// we will try to modify player and an error will be thrown
+			p = &Player{}
+			p.Id = ev.Event["id"].(string)
 		}
 	}
 
-	return &p, nil
+	if err := iter.Err(); err != nil {
+		return nil, err
+	} else if p == nil {
+		return nil, errors.New("Error not found")
+	}
+
+	return p, nil
 }
