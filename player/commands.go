@@ -6,13 +6,14 @@ package player
 import (
 	"cqrs-example/events"
 	"cqrs-example/global"
+	"errors"
 
 	"github.com/kataras/iris"
 	uuid "github.com/satori/go.uuid"
 	"gopkg.in/mgo.v2/bson"
 )
 
-func Player_add(ctx *iris.Context) {
+func player_add() (string, error) {
 	c := global.G.Db.C("users")
 	event := events.PlayerAddedEvent{uuid.NewV4().String()}
 
@@ -22,18 +23,14 @@ func Player_add(ctx *iris.Context) {
 	c.Find(bson.M{"event.id": event.Id}).All(&records)
 
 	if len(records) > 0 {
-		ctx.SetStatusCode(400)
-		ctx.SetBodyString("User with id already exists")
-		return
+		return "", errors.New("User exists")
 	}
 
 	err := c.Insert(&record)
 	if err != nil {
 		iris.Logger.Panicf("ERROR: " + err.Error())
-		ctx.SetStatusCode(500)
+		return "", err
 	}
 
-	ctx.SetStatusCode(201)
-	ctx.SetContentType("game/user_id")
-	ctx.SetBodyString(event.Id)
+	return event.Id, nil
 }

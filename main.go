@@ -28,7 +28,8 @@ func main() {
 
 	iris.Use(logger.New(iris.Logger))
 
-	iris.Post("/players", player.Player_add)
+	iris.Post("/players", player.AddPlayer)
+	iris.Get("/players/:id", player.GetPlayer)
 
 	iris.Listen(":8080")
 }
