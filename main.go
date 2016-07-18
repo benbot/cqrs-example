@@ -24,7 +24,7 @@ func main() {
 	iris.Logger.Println("Connected to mongo!")
 	defer session.Close()
 
-	global.G.Db = session.DB("game")
+	global.Db = session.DB("game")
 
 	iris.Use(logger.New(iris.Logger))
 

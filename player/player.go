@@ -1,6 +1,7 @@
 package player
 
 import (
+	"cqrs-example/events"
 	"cqrs-example/global"
 	"errors"
 
@@ -14,13 +15,7 @@ type Player struct {
 }
 
 func player_projection(id string) (*Player, error) {
-	defer func() {
-		if e := recover(); e != nil {
-			iris.Logger.Println(e)
-		}
-	}()
-
-	c := global.G.Db.C("users")
+	c := global.Db.C(global.USER_COLLECTION)
 
 	type evDeconstruct struct {
 		Type  string                 `bson:"type"`
@@ -28,9 +23,13 @@ func player_projection(id string) (*Player, error) {
 	}
 
 	iter := c.Find(bson.M{"event.id": id}).Sort("_id").Iter()
+	defer iter.Close()
 
-	var ev evDeconstruct
-	var p *Player
+	var (
+		p   *Player
+		ev  evDeconstruct
+		err error
+	)
 
 	for iter.Next(&ev) {
 		switch {
@@ -38,12 +37,22 @@ func player_projection(id string) (*Player, error) {
 			// This should be the first event for any player
 			// so we devine p here. If another event comes first
 			// we will try to modify player and an error will be thrown
-			p = &Player{}
-			p.Id = ev.Event["id"].(string)
+			addEv := &PlayerAddedEvent{}
+			for s, v := range ev.Event {
+				if err := events.SetField(addEv, s, v); err != nil {
+					panic(err)
+					iris.Logger.Println(err)
+				}
+			}
+
+			p, err = added_event(addEv)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 
-	if err := iter.Err(); err != nil {
+	if err = iter.Err(); err != nil {
 		return nil, err
 	} else if p == nil {
 		return nil, errors.New("Error not found")

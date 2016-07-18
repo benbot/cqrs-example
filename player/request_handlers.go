@@ -13,22 +13,9 @@ func AddPlayer(ctx *iris.Context) {
 		return
 	}
 
-	p, err := player_projection(id)
-	if err != nil {
-		ctx.SetStatusCode(500)
-		return
-	}
-
-	var resp []byte
-	resp, err = json.Marshal(p)
-	if err != nil {
-		ctx.SetStatusCode(500)
-		return
-	}
-
 	ctx.SetStatusCode(201)
 	ctx.SetContentType("application/json")
-	ctx.SetBody(resp)
+	ctx.SetBody([]byte(id))
 }
 
 func GetPlayer(ctx *iris.Context) {

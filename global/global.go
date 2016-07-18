@@ -2,8 +2,7 @@ package global
 
 import "gopkg.in/mgo.v2"
 
-type Global struct {
-	Db *mgo.Database
-}
-
-var G Global
+var (
+	Db              *mgo.Database
+	USER_COLLECTION = "users"
+)
