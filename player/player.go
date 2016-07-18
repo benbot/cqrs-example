@@ -1,8 +1,8 @@
 package player
 
 import (
-	"cqrs-example/events"
 	"cqrs-example/global"
+	"cqrs-example/helpers"
 	"errors"
 
 	"github.com/kataras/iris"
@@ -35,11 +35,12 @@ func player_projection(id string) (*Player, error) {
 		switch {
 		case ev.Type == "PlayerAddedEvent":
 			// This should be the first event for any player
-			// so we devine p here. If another event comes first
+			// so we define p here. If another event comes first
 			// we will try to modify player and an error will be thrown
+			// because p is an empty pointer
 			addEv := &PlayerAddedEvent{}
 			for s, v := range ev.Event {
-				if err := events.SetField(addEv, s, v); err != nil {
+				if err := helpers.SetField(addEv, s, v); err != nil {
 					panic(err)
 					iris.Logger.Println(err)
 				}

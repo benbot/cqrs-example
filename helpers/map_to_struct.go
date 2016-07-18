@@ -1,11 +1,12 @@
-package events
+//This file contains all helper functions for converting a map into a struct
+package helpers
 
 import (
 	"errors"
 	"reflect"
 )
 
-// Helper function to help programatically convert map[string]interface{} into the correct event typ
+// Helper function to help programatically convert map[string]interface{} into the correct event type
 func SetField(obj interface{}, name string, value interface{}) error {
 	structType := reflect.TypeOf(obj).Elem()
 	structField, found := structType.FieldByNameFunc(func(n string) bool {
