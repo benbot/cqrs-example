@@ -5,8 +5,6 @@ import (
 	"cqrs-example/player"
 	"flag"
 
-	"gopkg.in/mgo.v2"
-
 	"github.com/iris-contrib/middleware/logger"
 	"github.com/kataras/iris"
 )
