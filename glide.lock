@@ -1,5 +1,5 @@
 hash: d390c92a5bfcb1b60b2cb90d5502451b39722ee4af7a1c7a65207f597ec0c9f8
-updated: 2016-07-12T00:20:14.998784565-04:00
+updated: 2016-07-23T12:08:51.664260154-04:00
 imports:
 - name: github.com/ajg/form
   version: 7ff89c75808766205bfa4411abb436c98c33eb5e
@@ -40,6 +40,19 @@ imports:
   version: 9235644dd9e52eeae6fa48efd539fdc351a0af53
   subpackages:
   - query
+- name: github.com/graphql-go/graphql
+  version: 491504a5ac801fc9d72ecae4e57e5231c6a57595
+  subpackages:
+  - gqlerrors
+  - language/ast
+  - language/kinds
+  - language/parser
+  - language/printer
+  - language/source
+  - language/visitor
+  - language/location
+  - language/lexer
+  - language/typeInfo
 - name: github.com/imdario/mergo
   version: 50d4dbd4eb0e84778abe37cefef140271d96fade
 - name: github.com/imkira/go-interpol
@@ -137,6 +150,7 @@ imports:
   version: f841c39de738b1d0df95b5a7187744f0e03d8112
   subpackages:
   - publicsuffix
+  - context
   - html
   - html/atom
 - name: golang.org/x/sys
